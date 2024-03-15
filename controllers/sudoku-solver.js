@@ -1,14 +1,26 @@
 class SudokuSolver {
-  validate(puzzleString) {
-    // convert to 2d array
+  strTo2d(puzzleString) {
     const board = [];
     for (let i = 0; i < 9; i++) {
       const row = [];
       for (let j = 0; j < 9; j++) {
         const index = i * 9 + j;
-        row.push(puzzleString[index]);
+        row.push(puzzleString[index] === "." ? 0 : Number(puzzleString[index]));
       }
       board.push(row);
+    }
+    return board;
+  }
+
+  validate(puzzleString) {
+    // convert to 2d array
+    const board = this.strTo2d(puzzleString);
+    console.log(board);
+
+    for (let i = 0; i < 9; i++) {
+      if (board[i].includes(NaN)) {
+        return false;
+      }
     }
 
     // check row col dupslicates
@@ -18,12 +30,12 @@ class SudokuSolver {
 
       for (let j = 0; j < 9; j++) {
         //row
-        if (board[i][j] !== "." && rowSet.has(board[i][j])) {
+        if (!!board[i][j] && rowSet.has(board[i][j])) {
           return false;
         }
         rowSet.add(board[i][j]);
         //col
-        if (board[j][i] !== "." && colSet.has(board[j][i])) {
+        if (!!board[j][i] && colSet.has(board[j][i])) {
           return false;
         }
         colSet.add(board[j][i]);
@@ -38,7 +50,7 @@ class SudokuSolver {
         // row and col of each sub
         for (let x = i; x < i + 3; x++) {
           for (let y = j; y < j + 3; y++) {
-            if (board[x][y] !== "." && subgridSet.has(board[x][y])) {
+            if (!!board[x][y] && subgridSet.has(board[x][y])) {
               return false;
             }
             subgridSet.add(board[x][y]);
