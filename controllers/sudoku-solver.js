@@ -12,10 +12,8 @@ class SudokuSolver {
     return board;
   }
 
-  validate(puzzleString) {
+  validate(board) {
     // convert to 2d array
-    const board = this.strTo2d(puzzleString);
-    console.log(board);
 
     for (let i = 0; i < 9; i++) {
       if (board[i].includes(NaN)) {
@@ -59,17 +57,64 @@ class SudokuSolver {
       }
     }
 
+    return board;
+  }
+
+  validator(puzzleString) {
+    const board = this.strTo2d(puzzleString);
+    if (this.validate(board)) {
+      return board;
+    }
+    return false;
+  }
+
+  validPlacement(board, row, col, num) {
+    for (let i = 0; i < 9; i++) {
+      if (board[i][col] === num) {
+        return false;
+      }
+      if (board[row][i] === num) {
+        return false;
+      }
+      if (
+        board[3 * Math.floor(row / 3) + Math.floor(i / 3)][
+          3 * Math.floor(col / 3) + (i % 3)
+        ] === num
+      ) {
+        return false;
+      }
+    }
     return true;
   }
 
-  checkRowPlacement(puzzleString, row, column, value) {}
-
-  checkColPlacement(puzzleString, row, column, value) {}
-
-  checkRegionPlacement(puzzleString, row, column, value) {}
+  solvent(board, r, c) {
+    if (r === 9) {
+      return true;
+    } else if (c === 9) {
+      return this.solvent(board, r + 1, 0);
+    } else if (board[r][c] !== 0) {
+      return this.solvent(board, r, c + 1);
+    } else {
+      for (let i = 1; i <= 9; i++) {
+        if (this.validPlacement(board, r, c, i)) {
+          board[r][c] = i;
+          if (this.solvent(board, r, c + 1)) {
+            return true;
+          }
+          board[r][c] = 0;
+        }
+      }
+      return false;
+    }
+  }
 
   solve(puzzleString) {
-    // join the 2d array
+    let board = this.validator(puzzleString);
+    if (!board) {
+      return "Invalid Puzzle";
+    }
+
+    return board;
   }
 }
 
