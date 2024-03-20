@@ -69,22 +69,23 @@ class SudokuSolver {
   }
 
   validPlacement(board, row, col, num) {
+    let conflicts = []
     for (let i = 0; i < 9; i++) {
       if (board[i][col] === num) {
-        return false;
+        conflicts.push("column")
       }
       if (board[row][i] === num) {
-        return false;
+        conflicts.push("row")
       }
       if (
         board[3 * Math.floor(row / 3) + Math.floor(i / 3)][
           3 * Math.floor(col / 3) + (i % 3)
         ] === num
       ) {
-        return false;
+        conflicts.push("region")
       }
     }
-    return true;
+    return conflicts;
   }
 
   solvent(board, r, c) {
@@ -96,7 +97,7 @@ class SudokuSolver {
       return this.solvent(board, r, c + 1);
     } else {
       for (let i = 1; i <= 9; i++) {
-        if (this.validPlacement(board, r, c, i)) {
+        if (this.validPlacement(board, r, c, i).length === 0) {
           board[r][c] = i;
           if (this.solvent(board, r, c + 1)) {
             return true;
