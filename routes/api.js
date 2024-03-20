@@ -10,9 +10,8 @@ module.exports = function (app) {
   app.route("/api/solve").post((req, res) => {
     let puzzleStr = req.body.puzzle;
     let board = solver.solve(puzzleStr);
-    if (solver.solvent(board, 0, 0)) {
-      let solved = board.flat().join("");
-      console.log(solved);
-    }
+    solver.solvent(board, 0, 0);
+    let solved = board.flat().join("");
+    console.log(solved);
   });
 };
