@@ -28,19 +28,30 @@ module.exports = function (app) {
     // check for invalid characters in puzzle, err, Invalid characters in puzzle
     let validCharacters = solver.validateCharacters(board);
     if (!validCharacters) {
-      return res.json({ error: "Invalid characters in puzzle" })
+      return res.json({ error: "Invalid characters in puzzle" });
     }
+    if (coordinate.length !== 2) {
+      return res.json({ error: "Invalid coordinate" });
+    }
+    // row must be a letter A-I and col must be a number 1-9
     let [row, col] = coordinate.split("");
+    if (
+      typeof row === Number ||
+      rowMatch[row.toUpperCase()] === undefined ||
+      isNaN(Number(col))
+    ) {
+      return res.json({ error: "Invalid coordinate" });
+    }
     row = rowMatch[row.toUpperCase()];
     col -= 1;
     value = Number(value);
     // check if coordinate is valid;!!! FURTHER CHECKS NEEDED
-    if ( row < 0 || col < 0 || row > 8 || col > 8) {
-      return res.json({ error: "Invalid coordinates" })
+    if (row < 0 || col < 0 || row > 8 || col > 8) {
+      return res.json({ error: "Invalid coordinate" });
     }
     // check is value is 1-9
     if (isNaN(value) || value < 0 || value > 9) {
-      return res.json({ error: "Invalid value" })
+      return res.json({ error: "Invalid value" });
     }
     if (board[row][col] === value) {
       return res.json({ valid: true });
