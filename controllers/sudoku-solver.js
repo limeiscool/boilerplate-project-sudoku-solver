@@ -57,32 +57,24 @@ class SudokuSolver {
       }
     }
 
-    return board;
-  }
-
-  validator(puzzleString) {
-    const board = this.strTo2d(puzzleString);
-    if (this.validate(board)) {
-      return board;
-    }
-    return false;
+    return true;
   }
 
   validPlacement(board, row, col, num) {
-    let conflicts = []
+    let conflicts = [];
     for (let i = 0; i < 9; i++) {
       if (board[i][col] === num) {
-        conflicts.push("column")
+        conflicts.push("column");
       }
       if (board[row][i] === num) {
-        conflicts.push("row")
+        conflicts.push("row");
       }
       if (
         board[3 * Math.floor(row / 3) + Math.floor(i / 3)][
           3 * Math.floor(col / 3) + (i % 3)
         ] === num
       ) {
-        conflicts.push("region")
+        conflicts.push("region");
       }
     }
     return conflicts;
@@ -107,15 +99,6 @@ class SudokuSolver {
       }
       return false;
     }
-  }
-
-  solve(puzzleString) {
-    let board = this.validator(puzzleString);
-    if (!board) {
-      return "Invalid Puzzle";
-    }
-
-    return board;
   }
 }
 
