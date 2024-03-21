@@ -12,15 +12,18 @@ class SudokuSolver {
     return board;
   }
 
-  validate(board) {
-    // convert to 2d array
-
+  validateCharacters(board) {
     for (let i = 0; i < 9; i++) {
       if (board[i].includes(NaN)) {
         return false;
+      } else {
+        return true;
       }
     }
+  }
 
+  validate(board) {
+    
     // check row col dupslicates
     for (let i = 0; i < 9; i++) {
       const rowSet = new Set();
