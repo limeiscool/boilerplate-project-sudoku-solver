@@ -18,12 +18,20 @@ module.exports = function (app) {
 
   app.route("/api/check").post((req, res) => {
     let { puzzle, coordinate, value } = req.body;
+    if (!puzzle || !coordinate || !value) {
+      res.json({ error: "Required field missing" });
+    }
+    if (puzzle.length !== 81) {
+      res.json({ error: "Expected puzzle to be 81 characters long" });
+    }
     let board = solver.strTo2d(puzzle);
-
+    // check for invalid characters in puzzle, err, Invalid characters in puzzle
     let [row, col] = coordinate.split("");
     row = rowMatch[row.toUpperCase()];
     col -= 1;
     value = Number(value);
+    // check if coordinate is valid;
+    // check is value is 1-9
     if (board[row][col] === value) {
       res.json({ valid: true });
     }
