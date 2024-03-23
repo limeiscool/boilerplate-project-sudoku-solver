@@ -19,7 +19,7 @@ module.exports = function (app) {
   app.route("/api/check").post((req, res) => {
     let { puzzle, coordinate, value } = req.body;
     if (!puzzle || !coordinate || !value) {
-      return res.json({ error: "Required field missing" });
+      return res.json({ error: "Required field(s) missing" });
     }
     if (puzzle.length !== 81) {
       return res.json({ error: "Expected puzzle to be 81 characters long" });
@@ -50,7 +50,8 @@ module.exports = function (app) {
       return res.json({ error: "Invalid coordinate" });
     }
     // check is value is 1-9
-    if (isNaN(value) || value < 0 || value > 9) {
+    console.log(value);
+    if (isNaN(value) || value < 1 || value > 9) {
       return res.json({ error: "Invalid value" });
     }
     if (board[row][col] === value) {
@@ -69,10 +70,15 @@ module.exports = function (app) {
     if (!puzzleStr) {
       return res.json({ error: "Required field missing" });
     }
+
     if (puzzleStr.length !== 81) {
       return res.json({ error: "Expected puzzle to be 81 characters long" });
     }
     let board = solver.strTo2d(puzzleStr);
+    let validCharacters = solver.validateCharacters(board);
+    if (!validCharacters) {
+      return res.json({ error: "Invalid characters in puzzle" });
+    }
     let valid = solver.validate(board);
     if (!valid) {
       return res.json({ error: "Puzzle cannot be solved" });
