@@ -21,12 +21,13 @@ module.exports = function (app) {
     if (!puzzle || !coordinate || !value) {
       return res.json({ error: "Required field(s) missing" });
     }
-    if (puzzle.length !== 81) {
+    let lengthCheck = solver.isLength81(puzzle);
+    if (!lengthCheck) {
       return res.json({ error: "Expected puzzle to be 81 characters long" });
     }
-    let board = solver.strTo2d(puzzle);
+
     // check for invalid characters in puzzle, err, Invalid characters in puzzle
-    let validCharacters = solver.validateCharacters(board);
+    let validCharacters = solver.validateCharacters(puzzle);
     if (!validCharacters) {
       return res.json({ error: "Invalid characters in puzzle" });
     }
@@ -36,7 +37,7 @@ module.exports = function (app) {
     // row must be a letter A-I and col must be a number 1-9
     let [row, col] = coordinate.split("");
     if (
-      typeof row === Number ||
+      !isNaN(Number(row)) ||
       rowMatch[row.toUpperCase()] === undefined ||
       isNaN(Number(col))
     ) {
@@ -50,10 +51,10 @@ module.exports = function (app) {
       return res.json({ error: "Invalid coordinate" });
     }
     // check is value is 1-9
-    console.log(value);
     if (isNaN(value) || value < 1 || value > 9) {
       return res.json({ error: "Invalid value" });
     }
+    let board = solver.strTo2d(puzzle);
     if (board[row][col] === value) {
       return res.json({ valid: true });
     }
@@ -70,22 +71,22 @@ module.exports = function (app) {
     if (!puzzleStr) {
       return res.json({ error: "Required field missing" });
     }
-
-    if (puzzleStr.length !== 81) {
+    let lengthCheck = solver.isLength81(puzzleStr);
+    if (!lengthCheck) {
       return res.json({ error: "Expected puzzle to be 81 characters long" });
     }
-    let board = solver.strTo2d(puzzleStr);
-    let validCharacters = solver.validateCharacters(board);
+
+    let validCharacters = solver.validateCharacters(puzzleStr);
     if (!validCharacters) {
       return res.json({ error: "Invalid characters in puzzle" });
     }
+    let board = solver.strTo2d(puzzleStr);
     let valid = solver.validate(board);
     if (!valid) {
       return res.json({ error: "Puzzle cannot be solved" });
     }
     solver.solvent(board, 0, 0);
     let solved = board.flat().join("");
-    console.log(solved);
     return res.json({ solution: solved });
   });
 };

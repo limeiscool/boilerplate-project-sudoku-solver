@@ -1,4 +1,8 @@
 class SudokuSolver {
+  isLength81(puzzleString) {
+    return puzzleString.length === 81;
+  }
+
   strTo2d(puzzleString) {
     const board = [];
     for (let i = 0; i < 9; i++) {
@@ -12,18 +16,12 @@ class SudokuSolver {
     return board;
   }
 
-  validateCharacters(board) {
-    for (let i = 0; i < 9; i++) {
-      if (board[i].includes(NaN)) {
-        return false;
-      } else {
-        return true;
-      }
-    }
+  validateCharacters(puzzleString) {
+    let regex = /^[1-9.]*$/;
+    return regex.test(puzzleString);
   }
 
   validate(board) {
-    
     // check row col dupslicates
     for (let i = 0; i < 9; i++) {
       const rowSet = new Set();
