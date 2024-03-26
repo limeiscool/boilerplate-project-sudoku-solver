@@ -46,7 +46,7 @@ module.exports = function (app) {
     row = rowMatch[row.toUpperCase()];
     col -= 1;
     value = Number(value);
-    // check if coordinate is valid;!!! FURTHER CHECKS NEEDED
+    // check if coordinate is valid;
     if (row < 0 || col < 0 || row > 8 || col > 8) {
       return res.json({ error: "Invalid coordinate" });
     }
